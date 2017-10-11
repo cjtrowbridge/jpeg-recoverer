@@ -4,6 +4,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <math.h>
+#include <string.h>
+
 
 // Function prototypes. Don't change these.
 unsigned char * read_card(char * fname, int *size);
@@ -80,6 +82,7 @@ void recover(unsigned char * data, int size){
     int sectorCount = ceil(size/sectorSize);
     int currentSector = 0;
     int jpegCount = 0;
+    int jpegStartPosition = 0;
 
     printf("Sectors In Raw File: %d\n",sectorCount);
     
@@ -89,17 +92,38 @@ void recover(unsigned char * data, int size){
         int filePosition = currentSector * sectorSize;
         
         if(
-            data[(filePosition + 0)] == 0xff &&
-            data[(filePosition + 1)] == 0xd8 &&
-            data[(filePosition + 2)] == 0xff && 
-            data[(filePosition + 3)] == 0xe0 
+            (
+                data[(filePosition + 0)] == 0xff &&
+                data[(filePosition + 1)] == 0xd8 &&
+                data[(filePosition + 2)] == 0xff && 
+                data[(filePosition + 3)] == 0xe0 
+            )||(
+                data[(filePosition + 0)] == 0xff &&
+                data[(filePosition + 1)] == 0xd8 &&
+                data[(filePosition + 2)] == 0xff && 
+                data[(filePosition + 3)] == 0xe1
+            )||(
+                currentSector==sectorCount
+            )
         ){
             
-            jpegCount++;
-        }
-        
-        for(int i = 0; i<sectorSize; i++){
-            filePosition = currentSector * sectorSize + i;
+            if(filePosition != 0){
+                
+                jpegCount++;
+                    
+                char* fname;
+                fname = (char*) malloc (10);
+                sprintf(fname,"%d%s",jpegCount,".jpg");
+               
+                int jpegLength = (filePosition-jpegStartPosition-1);
+                printf("Saving %s (%d-%d)(%d)\n",fname,jpegStartPosition,(jpegStartPosition+jpegLength),jpegLength);
+                
+                char* dataStart = data+jpegStartPosition;
+                
+                save_jpeg( dataStart , jpegLength, fname);
+            
+            }
+            jpegStartPosition = filePosition;
             
         }
         
