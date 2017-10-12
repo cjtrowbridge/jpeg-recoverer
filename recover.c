@@ -76,6 +76,12 @@ void save_jpeg(unsigned char * data, int size, char * fname)
 
 void recover(unsigned char * data, int size){
     
+    
+    //printf("0x%x\n",data[0]);
+    //printf("0x%x\n",data[1]);
+    //printf("0x%x\n",data[2]);
+    //printf("0x%x\n",data[3]);
+    
     printf("Raw File Size: %d\n",size);
     
     int sectorSize = 512;
@@ -107,7 +113,7 @@ void recover(unsigned char * data, int size){
             )
         ){
             
-            if(filePosition != 0){
+            if(jpegStartPosition != 0){
                 
                 jpegCount++;
                     
@@ -116,11 +122,10 @@ void recover(unsigned char * data, int size){
                 sprintf(fname,"%d%s",jpegCount,".jpg");
                
                 int jpegLength = (filePosition-jpegStartPosition-1);
-                printf("Saving %s (%d-%d)(%d)\n",fname,jpegStartPosition,(jpegStartPosition+jpegLength),jpegLength);
                 
-                char* dataStart = data+jpegStartPosition;
+                printf("Saving %s (Position: %d-%d)(Length: %d)\n",fname,jpegStartPosition,(jpegStartPosition+jpegLength),jpegLength);
                 
-                save_jpeg( dataStart , jpegLength, fname);
+                save_jpeg( &data[jpegStartPosition] , jpegLength, fname);
             
             }
             jpegStartPosition = filePosition;
