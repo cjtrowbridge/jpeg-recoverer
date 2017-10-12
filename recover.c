@@ -109,7 +109,7 @@ void recover(unsigned char * data, int size){
                 data[(filePosition + 2)] == 0xff && 
                 data[(filePosition + 3)] == 0xe1
             )||(
-                currentSector==sectorCount
+                currentSector==(sectorCount-1)
             )
         ){
             
