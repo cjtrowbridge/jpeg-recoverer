@@ -1,6 +1,8 @@
 # Sierra College: CSCI-0046
 This C program recovers JPEG files from a raw dump of a memory card with a corrupted file system.
 
+## Lab 4: CSI
+
 Just the other day, I took a stroll around campus snapping photos, all of which were stored as JPEGs on an SD card. I took pictures of identifiable but non-obvious persons, places, and things on campus.
 
 Unfortunately, I somehow corrupted that SD card the moment I got home. Both my Mac and PC refuse to recognize the card now as having any photos, even though I'm pretty sure I took them. Both operating systems want to format the card, but, thus far, I've refused to let them, hoping instead someone can come to the rescue.
